@@ -1,3 +1,24 @@
+/*
+Navicat MySQL Data Transfer
+
+Source Server         : mandofin_test
+Source Server Version : 50721
+Source Host           : 192.168.0.44:3306
+Source Database       : test_shopmall
+
+Target Server Type    : MYSQL
+Target Server Version : 50721
+File Encoding         : 65001
+
+Date: 2019-11-08 10:31:32
+*/
+
+SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for advertisement
+-- ----------------------------
+DROP TABLE IF EXISTS `advertisement`;
 CREATE TABLE `advertisement` (
   `id` bigint(20) NOT NULL COMMENT '广告id',
   `title` varchar(50) NOT NULL COMMENT '广告标题',
@@ -12,6 +33,10 @@ CREATE TABLE `advertisement` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for category
+-- ----------------------------
+DROP TABLE IF EXISTS `category`;
 CREATE TABLE `category` (
   `id` bigint(20) NOT NULL,
   `category_name` varchar(20) NOT NULL COMMENT '分类名称',
@@ -24,6 +49,10 @@ CREATE TABLE `category` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类';
 
+-- ----------------------------
+-- Table structure for commission_plan
+-- ----------------------------
+DROP TABLE IF EXISTS `commission_plan`;
 CREATE TABLE `commission_plan` (
   `id` bigint(20) NOT NULL,
   `planNo` varchar(20) DEFAULT NULL COMMENT '计划编号',
@@ -41,6 +70,10 @@ CREATE TABLE `commission_plan` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分佣计划';
 
+-- ----------------------------
+-- Table structure for delivery_address
+-- ----------------------------
+DROP TABLE IF EXISTS `delivery_address`;
 CREATE TABLE `delivery_address` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
@@ -62,6 +95,10 @@ CREATE TABLE `delivery_address` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='收获地址';
 
+-- ----------------------------
+-- Table structure for distribution_place
+-- ----------------------------
+DROP TABLE IF EXISTS `distribution_place`;
 CREATE TABLE `distribution_place` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `order_no` varchar(20) DEFAULT NULL COMMENT '订单编号',
@@ -73,10 +110,14 @@ CREATE TABLE `distribution_place` (
   `street_name` varchar(20) DEFAULT NULL COMMENT '街道名称',
   `detail` varchar(100) DEFAULT NULL COMMENT '收件人详细地址',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单配送地址';
 
+-- ----------------------------
+-- Table structure for evaluate
+-- ----------------------------
+DROP TABLE IF EXISTS `evaluate`;
 CREATE TABLE `evaluate` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `good_spec_id` bigint(20) DEFAULT NULL COMMENT '商品（单品）规格id',
@@ -86,13 +127,17 @@ CREATE TABLE `evaluate` (
   `describe_star` int(9) DEFAULT '5' COMMENT '描述相符',
   `service_star` int(9) DEFAULT '5' COMMENT '服务态度',
   `distribution_star` int(9) DEFAULT '5' COMMENT '校内配送服务',
-  `content` varchar(255) DEFAULT NULL COMMENT '评论内容',
+  `content` varchar(255) CHARACTER SET utf8mb4 DEFAULT NULL COMMENT '评论内容',
   `imageurls` varchar(255) DEFAULT NULL COMMENT '图片地址id，逗号分隔',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '修改时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='评价';
 
+-- ----------------------------
+-- Table structure for good
+-- ----------------------------
+DROP TABLE IF EXISTS `good`;
 CREATE TABLE `good` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `store_id` bigint(20) NOT NULL COMMENT '店铺id',
@@ -109,6 +154,10 @@ CREATE TABLE `good` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品营销信息';
 
+-- ----------------------------
+-- Table structure for good_attribute
+-- ----------------------------
+DROP TABLE IF EXISTS `good_attribute`;
 CREATE TABLE `good_attribute` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `good_stock_id` bigint(20) NOT NULL COMMENT '商品库id',
@@ -119,6 +168,10 @@ CREATE TABLE `good_attribute` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品规格属性';
 
+-- ----------------------------
+-- Table structure for good_attribute_value
+-- ----------------------------
+DROP TABLE IF EXISTS `good_attribute_value`;
 CREATE TABLE `good_attribute_value` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `good_stock_id` bigint(20) NOT NULL COMMENT '商品库id',
@@ -132,6 +185,10 @@ CREATE TABLE `good_attribute_value` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品属性值表';
 
+-- ----------------------------
+-- Table structure for good_spec
+-- ----------------------------
+DROP TABLE IF EXISTS `good_spec`;
 CREATE TABLE `good_spec` (
   `id` bigint(20) NOT NULL,
   `good_id` bigint(20) DEFAULT NULL COMMENT '商品id',
@@ -146,6 +203,10 @@ CREATE TABLE `good_spec` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品(单品)规格';
 
+-- ----------------------------
+-- Table structure for good_stock
+-- ----------------------------
+DROP TABLE IF EXISTS `good_stock`;
 CREATE TABLE `good_stock` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `category_id` bigint(20) NOT NULL COMMENT '商品分类id',
@@ -168,6 +229,10 @@ CREATE TABLE `good_stock` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品库';
 
+-- ----------------------------
+-- Table structure for good_stock_campus_spec
+-- ----------------------------
+DROP TABLE IF EXISTS `good_stock_campus_spec`;
 CREATE TABLE `good_stock_campus_spec` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `good_stock_id` bigint(20) NOT NULL COMMENT '商品库id',
@@ -181,6 +246,10 @@ CREATE TABLE `good_stock_campus_spec` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品库校区规格';
 
+-- ----------------------------
+-- Table structure for good_stock_region
+-- ----------------------------
+DROP TABLE IF EXISTS `good_stock_region`;
 CREATE TABLE `good_stock_region` (
   `id` bigint(20) NOT NULL,
   `good_stock_id` bigint(20) NOT NULL COMMENT '商品库id',
@@ -192,6 +261,10 @@ CREATE TABLE `good_stock_region` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品库销售校区';
 
+-- ----------------------------
+-- Table structure for good_stock_spec
+-- ----------------------------
+DROP TABLE IF EXISTS `good_stock_spec`;
 CREATE TABLE `good_stock_spec` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `good_stock_id` bigint(20) NOT NULL COMMENT '商品库id',
@@ -209,6 +282,10 @@ CREATE TABLE `good_stock_spec` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品库规格表';
 
+-- ----------------------------
+-- Table structure for image
+-- ----------------------------
+DROP TABLE IF EXISTS `image`;
 CREATE TABLE `image` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `relation_id` bigint(20) DEFAULT NULL COMMENT '关联对象id',
@@ -219,19 +296,10 @@ CREATE TABLE `image` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='图片存储';
 
-CREATE TABLE `order_record` (
-  `id` bigint(20) NOT NULL COMMENT '主键',
-  `order_no` varchar(20) DEFAULT NULL COMMENT '订单编号',
-  `user_id` bigint(20) DEFAULT NULL COMMENT '操作者userID',
-  `mobile` varchar(20) DEFAULT NULL COMMENT '操作者手机号',
-  `user_name` varchar(50) DEFAULT NULL COMMENT '用户姓名',
-  `content` varchar(20) DEFAULT NULL COMMENT '操作内容',
-  `mark` varchar(255) DEFAULT NULL COMMENT '备注',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单记录';
-
+-- ----------------------------
+-- Table structure for orders
+-- ----------------------------
+DROP TABLE IF EXISTS `orders`;
 CREATE TABLE `orders` (
   `id` bigint(20) NOT NULL,
   `order_no` varchar(20) NOT NULL COMMENT '订单编号',
@@ -252,6 +320,27 @@ CREATE TABLE `orders` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='资金订单表';
 
+-- ----------------------------
+-- Table structure for order_record
+-- ----------------------------
+DROP TABLE IF EXISTS `order_record`;
+CREATE TABLE `order_record` (
+  `id` bigint(20) NOT NULL COMMENT '主键',
+  `order_no` varchar(20) DEFAULT NULL COMMENT '订单编号',
+  `user_id` bigint(20) DEFAULT NULL COMMENT '操作者userID',
+  `mobile` varchar(20) DEFAULT NULL COMMENT '操作者手机号',
+  `user_name` varchar(50) DEFAULT NULL COMMENT '用户姓名',
+  `content` varchar(20) DEFAULT NULL COMMENT '操作内容',
+  `mark` varchar(255) DEFAULT NULL COMMENT '备注',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单记录';
+
+-- ----------------------------
+-- Table structure for profit_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `profit_detail`;
 CREATE TABLE `profit_detail` (
   `id` bigint(20) NOT NULL,
   `orderNo` varchar(20) DEFAULT NULL COMMENT '销售订单编号',
@@ -268,6 +357,10 @@ CREATE TABLE `profit_detail` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分润详情';
 
+-- ----------------------------
+-- Table structure for sell_order
+-- ----------------------------
+DROP TABLE IF EXISTS `sell_order`;
 CREATE TABLE `sell_order` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `no` varchar(20) DEFAULT NULL COMMENT '商品编号',
@@ -305,6 +398,10 @@ CREATE TABLE `sell_order` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='销售订单表';
 
+-- ----------------------------
+-- Table structure for sequence
+-- ----------------------------
+DROP TABLE IF EXISTS `sequence`;
 CREATE TABLE `sequence` (
   `name` varchar(20) NOT NULL COMMENT '序列名称',
   `current_value` bigint(20) NOT NULL COMMENT '当前值',
@@ -313,6 +410,10 @@ CREATE TABLE `sequence` (
   PRIMARY KEY (`name`,`seq_date`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for shell_details
+-- ----------------------------
+DROP TABLE IF EXISTS `shell_details`;
 CREATE TABLE `shell_details` (
   `id` bigint(20) NOT NULL,
   `user_shell_id` bigint(20) NOT NULL COMMENT '用户校贝id',
@@ -327,6 +428,10 @@ CREATE TABLE `shell_details` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='校贝详情表';
 
+-- ----------------------------
+-- Table structure for store
+-- ----------------------------
+DROP TABLE IF EXISTS `store`;
 CREATE TABLE `store` (
   `id` bigint(20) NOT NULL,
   `store_name` varchar(50) DEFAULT NULL COMMENT '店铺名称',
@@ -342,6 +447,10 @@ CREATE TABLE `store` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='校队店铺';
 
+-- ----------------------------
+-- Table structure for system_config
+-- ----------------------------
+DROP TABLE IF EXISTS `system_config`;
 CREATE TABLE `system_config` (
   `id` bigint(20) NOT NULL COMMENT '系统配置id',
   `config_name` varchar(50) NOT NULL COMMENT '系统配置名称',
@@ -352,6 +461,10 @@ CREATE TABLE `system_config` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- ----------------------------
+-- Table structure for user_shell
+-- ----------------------------
+DROP TABLE IF EXISTS `user_shell`;
 CREATE TABLE `user_shell` (
   `id` bigint(20) NOT NULL COMMENT '用户校贝表id',
   `user_id` bigint(20) NOT NULL COMMENT '用户id',
@@ -362,3 +475,29 @@ CREATE TABLE `user_shell` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户校贝数量表';
 
+-- ----------------------------
+-- Procedure structure for gen_sequence
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `gen_sequence`;
+DELIMITER ;;
+CREATE DEFINER=`testgroup`@`%` PROCEDURE `gen_sequence`( IN seqName VARCHAR(50), IN size INT)
+BEGIN
+DECLARE v_result INT DEFAULT 0;
+DECLARE v_cur_date DATE;
+DECLARE v_current_val INTEGER DEFAULT 0;
+DECLARE v_error INTEGER DEFAULT 0;
+SET v_result = 0;
+SET v_cur_date = CURDATE();
+SELECT current_value INTO v_current_val FROM `sequence` WHERE `name` = seqName AND `seq_date` = v_cur_date FOR UPDATE;
+IF v_current_val = 0 THEN
+	INSERT INTO sequence(`name`, current_value, pre_value, seq_date) VALUES (seqName, size, 1, v_cur_date);
+ELSE
+	UPDATE sequence
+	SET current_value = v_current_val + size, pre_value = v_current_val
+	WHERE NAME = seqName AND `seq_date` = DATE(NOW());
+END IF;
+SET v_result = v_current_val + 1 ;
+SELECT v_result AS seq;
+END
+;;
+DELIMITER ;
