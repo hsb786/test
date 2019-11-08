@@ -4,13 +4,13 @@ Navicat MySQL Data Transfer
 Source Server         : mandofin_test
 Source Server Version : 50721
 Source Host           : 192.168.0.44:3306
-Source Database       : test_shopmall
+Source Database       : shopmall
 
 Target Server Type    : MYSQL
 Target Server Version : 50721
 File Encoding         : 65001
 
-Date: 2019-11-08 10:31:32
+Date: 2019-11-08 10:58:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,12 +24,12 @@ CREATE TABLE `advertisement` (
   `title` varchar(50) NOT NULL COMMENT '广告标题',
   `sequence` int(20) DEFAULT NULL COMMENT '顺序',
   `use_type` varchar(10) DEFAULT NULL COMMENT '用途',
-  `type` varchar(10) NOT NULL DEFAULT 'ALL' COMMENT '类型',
+  `type` varchar(10) DEFAULT 'ALL' COMMENT '类型',
   `url` varchar(255) DEFAULT NULL COMMENT '链接',
   `image` varchar(500) DEFAULT NULL COMMENT '图片id',
   `state` tinyint(10) DEFAULT '1' COMMENT '状态',
   `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `modify_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -50,23 +50,44 @@ CREATE TABLE `category` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品分类';
 
 -- ----------------------------
+-- Table structure for commission_order_detail
+-- ----------------------------
+DROP TABLE IF EXISTS `commission_order_detail`;
+CREATE TABLE `commission_order_detail` (
+  `id` bigint(32) NOT NULL COMMENT '主键',
+  `sell_order_no` varchar(32) NOT NULL COMMENT '销售订单编号',
+  `pay_proce_rate` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '支付手续利率',
+  `sc_commission_rate` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '校队/店铺分佣利率',
+  `real_money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '支付金额',
+  `pay_proce_money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '支付手续费',
+  `stock_price` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '成本价',
+  `sc_gross` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '毛利',
+  `plt_commission_money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '平台分佣金额',
+  `team_commission_money` decimal(8,2) NOT NULL DEFAULT '0.00' COMMENT '校队分佣金额',
+  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
 -- Table structure for commission_plan
 -- ----------------------------
 DROP TABLE IF EXISTS `commission_plan`;
 CREATE TABLE `commission_plan` (
   `id` bigint(20) NOT NULL,
-  `planNo` varchar(20) DEFAULT NULL COMMENT '计划编号',
-  `orderNo` varchar(20) DEFAULT NULL COMMENT '销售订单编号',
+  `plan_no` varchar(20) DEFAULT NULL COMMENT '计划编号',
+  `order_no` varchar(20) DEFAULT NULL COMMENT '销售订单编号',
   `receive_user_id` bigint(20) DEFAULT NULL COMMENT '收钱用户id',
-  `receive_accountNo` varchar(20) DEFAULT NULL COMMENT '收钱账户编号',
+  `receive_account_no` varchar(20) DEFAULT NULL COMMENT '收钱账户编号',
   `target_user_id` bigint(20) DEFAULT NULL COMMENT '目标用户id',
-  `target_accountNo` varchar(20) DEFAULT NULL COMMENT '目标用户账户编号',
+  `target_account_no` varchar(20) DEFAULT NULL COMMENT '目标用户账户编号',
   `money` decimal(9,2) DEFAULT '0.00' COMMENT '分佣金额',
   `state` varchar(20) DEFAULT NULL COMMENT '结算状态：已结算，未结算',
   `pay_time` date DEFAULT NULL COMMENT '计划分佣日期',
   `real_time` datetime DEFAULT NULL COMMENT '实际分佣时间',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '更新时间',
+  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `commission_type` varchar(10) DEFAULT NULL COMMENT 'PLATFORM:平台 TEAM:校队',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分佣计划';
 
@@ -210,10 +231,10 @@ DROP TABLE IF EXISTS `good_stock`;
 CREATE TABLE `good_stock` (
   `id` bigint(20) NOT NULL COMMENT '主键',
   `category_id` bigint(20) NOT NULL COMMENT '商品分类id',
-  `good_type` varchar(20) NOT NULL COMMENT '商品类型：（ACTUAL：实际商品，VIRTUAL：虚拟商品）',
+  `good_type` varchar(20) NOT NULL DEFAULT 'ACTUAL' COMMENT '商品类型：（ACTUAL：实体商品，VIRTUAL：虚拟）',
   `good_source` varchar(20) NOT NULL COMMENT '商品来源：(PLATFORM：平台，SCHOOL_TEAM：校队)',
   `original_type` varchar(255) DEFAULT 'PLATFORM' COMMENT '创建来源：(PLATFORM：平台，SCHOOL_TEAM：校队)',
-  `good_title` varchar(50) NOT NULL COMMENT '商品名称',
+  `good_title` varchar(200) NOT NULL COMMENT '商品名称',
   `original_price` decimal(12,2) DEFAULT '0.00' COMMENT '原价，划线价',
   `stock_number_type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '库存计算的方式（0：不冻结；1：冻结）',
   `good_spec_type` varchar(20) NOT NULL COMMENT '商品规格类型（SINGLE：单进货价；MULTI：多进货价）',
@@ -338,26 +359,6 @@ CREATE TABLE `order_record` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='订单记录';
 
 -- ----------------------------
--- Table structure for profit_detail
--- ----------------------------
-DROP TABLE IF EXISTS `profit_detail`;
-CREATE TABLE `profit_detail` (
-  `id` bigint(20) NOT NULL,
-  `orderNo` varchar(20) DEFAULT NULL COMMENT '销售订单编号',
-  `commission_rate` decimal(9,2) DEFAULT '0.00' COMMENT '佣金利率',
-  `pay_rate` decimal(9,2) DEFAULT '0.00' COMMENT '支付手续费率',
-  `payRateMoney` decimal(9,2) DEFAULT '0.00' COMMENT '支付手续费',
-  `order_money` decimal(9,2) DEFAULT '0.00' COMMENT '订单实付金额',
-  `good_stock_price` decimal(9,2) DEFAULT '0.00' COMMENT '商品进货价',
-  `total_profit` decimal(9,2) DEFAULT '0.00' COMMENT '总利润',
-  `store_profit` decimal(9,2) DEFAULT '0.00' COMMENT '校区利润',
-  `platform_profit` decimal(9,2) DEFAULT '0.00' COMMENT '平台利润',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='分润详情';
-
--- ----------------------------
 -- Table structure for sell_order
 -- ----------------------------
 DROP TABLE IF EXISTS `sell_order`;
@@ -367,7 +368,7 @@ CREATE TABLE `sell_order` (
   `good_spec_id` bigint(20) NOT NULL COMMENT '商品单品id',
   `good_id` bigint(20) DEFAULT NULL COMMENT '商品集合id',
   `good_stock_id` bigint(20) DEFAULT NULL,
-  `good_stock_name` varchar(50) NOT NULL COMMENT '商品名称',
+  `good_stock_name` varchar(200) NOT NULL COMMENT '商品名称',
   `good_stock_type` varchar(50) DEFAULT NULL,
   `good_stock_source` varchar(20) DEFAULT NULL,
   `good_stock_spec_text` varchar(500) DEFAULT NULL,
@@ -378,6 +379,7 @@ CREATE TABLE `sell_order` (
   `store_id` bigint(20) NOT NULL COMMENT '店铺id',
   `school_team_id` bigint(20) DEFAULT NULL COMMENT '校队id',
   `school_team_name` varchar(50) DEFAULT NULL COMMENT '校队名称',
+  `campus_id` bigint(20) DEFAULT NULL COMMENT '用户下单所在校区id',
   `user_id` bigint(20) DEFAULT NULL COMMENT '用户id',
   `user_nickname` varchar(50) DEFAULT NULL COMMENT '用户昵称',
   `user_mobile` varchar(20) DEFAULT NULL COMMENT '用户手机号',
@@ -390,9 +392,9 @@ CREATE TABLE `sell_order` (
   `shell` int(11) DEFAULT '0' COMMENT '使用校贝数',
   `coupon` varchar(20) DEFAULT NULL COMMENT '使用优惠',
   `state` varchar(20) DEFAULT NULL COMMENT '订单状态',
-  `describe_reason` varchar(100) DEFAULT NULL COMMENT '订单关闭原因',
   `evaluate_state` varchar(20) DEFAULT NULL COMMENT '是否已评价',
   `end_type` varchar(10) DEFAULT NULL COMMENT '订单结束类型，system:系统自动结束，user:用户结束',
+  `describe_reason` varchar(255) DEFAULT NULL COMMENT '关闭描述',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -418,7 +420,7 @@ CREATE TABLE `shell_details` (
   `id` bigint(20) NOT NULL,
   `user_shell_id` bigint(20) NOT NULL COMMENT '用户校贝id',
   `change_number` bigint(20) NOT NULL COMMENT '变动个数',
-  `gain` tinyint(4) NOT NULL COMMENT '1：+（收入）， 0：-（支出）',
+  `gain` varchar(20) NOT NULL COMMENT 'IN：+（收入）， OUT：-（支出）',
   `before_num` bigint(20) NOT NULL COMMENT '变动前个数',
   `after_num` bigint(20) NOT NULL COMMENT '变动后个数',
   `describe_reason` varchar(255) NOT NULL COMMENT '变动原因',
@@ -480,7 +482,7 @@ CREATE TABLE `user_shell` (
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `gen_sequence`;
 DELIMITER ;;
-CREATE DEFINER=`testgroup`@`%` PROCEDURE `gen_sequence`( IN seqName VARCHAR(50), IN size INT)
+CREATE DEFINER=`root`@`%` PROCEDURE `gen_sequence`( IN seqName VARCHAR(50), IN size INT)
 BEGIN
 DECLARE v_result INT DEFAULT 0;
 DECLARE v_cur_date DATE;
