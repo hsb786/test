@@ -31,7 +31,7 @@ CREATE TABLE `product` (
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '产品创建时间',
   `modify_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '产品同步时间',
   PRIMARY KEY (`id`)
-  aaa
+  bbbb
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COMMENT='产品表';
 
 -- ----------------------------
